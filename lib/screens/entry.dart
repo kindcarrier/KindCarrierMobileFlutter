@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import './../components/auth/button.dart';
+import './login.dart';
 
 class EntryScreen extends StatefulWidget {
   EntryScreen({Key key}) : super(key: key);
@@ -14,6 +15,11 @@ class _EntryScreenState extends State<EntryScreen> {
       fit: BoxFit.cover,
       image: AssetImage('assets/background.png'),
     );
+  }
+
+  goToLogin() {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => LogInScreen()));
   }
 
   @override
@@ -41,7 +47,7 @@ class _EntryScreenState extends State<EntryScreen> {
               ),
               Button(
                 title: 'Войти',
-                onPress: () {},
+                onPress: this.goToLogin,
               ),
             ],
           ),
