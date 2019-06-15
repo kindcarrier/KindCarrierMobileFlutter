@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kind_carrier/components/auth/button.dart';
 import 'package:kind_carrier/screens/login.dart';
+import 'package:kind_carrier/screens/signup.dart';
 
 class EntryScreen extends StatefulWidget {
   EntryScreen({Key key}) : super(key: key);
@@ -17,9 +18,14 @@ class _EntryScreenState extends State<EntryScreen> {
     );
   }
 
-  goToLogin() {
+  goToLogIn() {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => LogInScreen()));
+  }
+
+  goToSignUp() {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => SignUpScreen()));
   }
 
   @override
@@ -39,15 +45,15 @@ class _EntryScreenState extends State<EntryScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Button(
-                title: 'Регистрация',
-                onPress: () {},
+                title: 'РЕГИСТРАЦИЯ',
+                onPress: goToSignUp,
               ),
               SizedBox(
                 height: 20,
               ),
               Button(
-                title: 'Войти',
-                onPress: this.goToLogin,
+                title: 'ВОЙТИ',
+                onPress: goToLogIn,
               ),
             ],
           ),

@@ -29,7 +29,7 @@ class _LogInScreenState extends State<LogInScreen> {
     if (form.validate()) {
       form.save();
       try {
-        var response = await auth.logIn(_email, _password);
+        var response = await auth.logIn(email: _email, password: _password);
         if (response.statusCode == 200) {
           // If server returns an OK response, parse the JSON.
           // return Post.fromJson(json.decode(response.body));
@@ -109,7 +109,7 @@ class _LogInScreenState extends State<LogInScreen> {
   }
 
   String _passwordValidator(value) {
-    return value.length < 3 ? 'Password must be 6 character min.' : null;
+    return value.length < 6 ? 'Password must be 6 character min.' : null;
   }
 
   String _emailValidator(value) {
