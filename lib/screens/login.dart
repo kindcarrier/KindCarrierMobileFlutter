@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kind_carrier/components/auth/button.dart';
 import 'package:kind_carrier/components/auth/text_input.dart';
 import 'package:kind_carrier/components/auth/title.dart' as AuthTitle;
-import 'package:kind_carrier/api/login.dart' as loginApi;
+import 'package:kind_carrier/api/auth.dart' as auth;
 import 'dart:convert';
 
 class LogInScreen extends StatefulWidget {
@@ -29,7 +29,7 @@ class _LogInScreenState extends State<LogInScreen> {
     if (form.validate()) {
       form.save();
       try {
-        var response = await loginApi.logIn(_email, _password);
+        var response = await auth.logIn(_email, _password);
         if (response.statusCode == 200) {
           // If server returns an OK response, parse the JSON.
           // return Post.fromJson(json.decode(response.body));
