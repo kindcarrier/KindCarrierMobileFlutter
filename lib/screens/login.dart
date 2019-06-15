@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import '../components/auth/button.dart';
-import '../components/auth/text_input.dart';
-import '../components/auth/title.dart' as AuthTitle;
+import 'package:kind_carrier/components/auth/button.dart';
+import 'package:kind_carrier/components/auth/text_input.dart';
+import 'package:kind_carrier/components/auth/title.dart' as AuthTitle;
+import 'package:kind_carrier/api/login.dart' as loginApi;
+import 'dart:convert';
 
 class LogInScreen extends StatefulWidget {
   LogInScreen({Key key}) : super(key: key);
@@ -22,16 +24,36 @@ class _LogInScreenState extends State<LogInScreen> {
     );
   }
 
-  void _submit() {
+  void _submit() async {
     final form = _formKey.currentState;
     if (form.validate()) {
       form.save();
-      showDialog(
-          context: context,
-          child: AlertDialog(
-            title: Text('Alert'),
-            content: Text('Email: $_email, password: $_password'),
-          ));
+      try {
+        var response = await loginApi.logIn(_email, _password);
+        if (response.statusCode == 200) {
+          // If server returns an OK response, parse the JSON.
+          // return Post.fromJson(json.decode(response.body));
+        } else {
+          var decoded = json.decode(response.body);
+          throw Exception(decoded['message']);
+        }
+        print(response.body.toString());
+      } catch (e) {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('Ошибка'),
+                content: Text('$e'),
+                actions: <Widget>[
+                  FlatButton(
+                    child: new Text('Ok'),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ],
+              );
+            });
+      }
     }
   }
 
@@ -87,7 +109,7 @@ class _LogInScreenState extends State<LogInScreen> {
   }
 
   String _passwordValidator(value) {
-    return value.length < 6 ? 'Password must be 6 character min.' : null;
+    return value.length < 3 ? 'Password must be 6 character min.' : null;
   }
 
   String _emailValidator(value) {

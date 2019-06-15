@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import './../components/auth/button.dart';
-import './login.dart';
+import 'package:kind_carrier/components/auth/button.dart';
+import 'package:kind_carrier/screens/login.dart';
 
 class EntryScreen extends StatefulWidget {
   EntryScreen({Key key}) : super(key: key);
