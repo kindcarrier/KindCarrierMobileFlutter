@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:kind_carrier/components/auth/button.dart';
-import 'package:kind_carrier/screens/login.dart';
-import 'package:kind_carrier/screens/signup.dart';
 
 class EntryScreen extends StatefulWidget {
   EntryScreen({Key key}) : super(key: key);
@@ -19,13 +17,11 @@ class _EntryScreenState extends State<EntryScreen> {
   }
 
   goToLogIn() {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => LogInScreen()));
+    Navigator.of(context).pushNamed('/login');
   }
 
   goToSignUp() {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => SignUpScreen()));
+    Navigator.of(context).pushNamed('/signup');
   }
 
   @override
