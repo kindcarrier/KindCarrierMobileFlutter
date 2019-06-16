@@ -4,6 +4,7 @@ import 'package:kind_carrier/components/auth/text_input.dart';
 import 'package:kind_carrier/components/auth/title.dart' as AuthTitle;
 import 'package:kind_carrier/api/auth.dart' as auth;
 import 'dart:convert';
+import 'package:kind_carrier/models/user.dart';
 
 class LogInScreen extends StatefulWidget {
   LogInScreen({Key key}) : super(key: key);
@@ -32,12 +33,13 @@ class _LogInScreenState extends State<LogInScreen> {
         var response = await auth.logIn(email: _email, password: _password);
         if (response.statusCode == 200) {
           // If server returns an OK response, parse the JSON.
-          // return Post.fromJson(json.decode(response.body));
+          var user = User.fromJson(json.decode(response.body));
+          print(user.avatar.url);
         } else {
           var decoded = json.decode(response.body);
           throw Exception(decoded['message']);
         }
-        print(response.body.toString());
+        // print(response.body.toString());
       } catch (e) {
         showDialog(
             context: context,
@@ -81,7 +83,7 @@ class _LogInScreenState extends State<LogInScreen> {
                   TextInput(
                     validator: _emailValidator,
                     onSaved: (val) => _email = val,
-                    hintText: 'Enter your email',
+                    hintText: 'Email',
                     labelText: 'Email',
                     keyboardType: TextInputType.emailAddress,
                   ),
@@ -89,8 +91,8 @@ class _LogInScreenState extends State<LogInScreen> {
                   TextInput(
                     validator: _passwordValidator,
                     onSaved: (val) => _password = val,
-                    hintText: 'Enter your password',
-                    labelText: 'Password',
+                    hintText: 'Пароль',
+                    labelText: 'Пароль',
                     obscureText: true,
                   ),
                   SizedBox(height: 20),
@@ -109,10 +111,10 @@ class _LogInScreenState extends State<LogInScreen> {
   }
 
   String _passwordValidator(value) {
-    return value.length < 6 ? 'Password must be 6 character min.' : null;
+    return value.length < 3 ? 'Пароль должен быть 3 символа минимум' : null;
   }
 
   String _emailValidator(value) {
-    return !value.contains('@') ? 'Not a valid email.' : null;
+    return !value.contains('@') ? 'Невалидный email.' : null;
   }
 }
