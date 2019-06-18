@@ -18,6 +18,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String _email = '';
   String _password = '';
 
+  bool inProgress = false;
+
   DecorationImage _buildBackgroundImage() {
     return DecorationImage(
       fit: BoxFit.cover,
@@ -27,6 +29,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   void _submit() async {
     final form = _formKey.currentState;
+
+    this.setState(() {
+      inProgress = true;
+    });
+
     if (form.validate()) {
       form.save();
       try {
@@ -70,6 +77,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
             });
       }
     }
+
+    this.setState(() {
+      inProgress = false;
+    });
   }
 
   @override
@@ -119,9 +130,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     SizedBox(height: 20),
                     Button(
                       title: 'Войти',
-                      onPress: _submit,
+                      onPress: !inProgress ? _submit : null,
                       width: 250,
-                    )
+                    ),
+                    inProgress
+                        ? Column(
+                            children: <Widget>[
+                              SizedBox(height: 10),
+                              CircularProgressIndicator(),
+                            ],
+                          )
+                        : Container(),
                   ],
                 ),
               ),

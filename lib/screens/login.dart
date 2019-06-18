@@ -18,6 +18,8 @@ class _LogInScreenState extends State<LogInScreen> {
   String _email = '';
   String _password = '';
 
+  bool inProgress = false;
+
   DecorationImage _buildBackgroundImage() {
     return DecorationImage(
       fit: BoxFit.cover,
@@ -27,6 +29,11 @@ class _LogInScreenState extends State<LogInScreen> {
 
   void _submit() async {
     final form = _formKey.currentState;
+
+    this.setState(() {
+      inProgress = true;
+    });
+
     if (form.validate()) {
       form.save();
       try {
@@ -35,11 +42,12 @@ class _LogInScreenState extends State<LogInScreen> {
           // If server returns an OK response, parse the JSON.
           var user = User.fromJson(json.decode(response.body));
           print(user.avatar.url);
+
+          Navigator.of(context).pushNamed('/home');
         } else {
           var decoded = json.decode(response.body);
           throw Exception(decoded['message']);
         }
-        // print(response.body.toString());
       } catch (e) {
         showDialog(
             context: context,
@@ -57,6 +65,10 @@ class _LogInScreenState extends State<LogInScreen> {
             });
       }
     }
+
+    this.setState(() {
+      inProgress = false;
+    });
   }
 
   @override
@@ -67,41 +79,51 @@ class _LogInScreenState extends State<LogInScreen> {
           image: _buildBackgroundImage(),
         ),
         child: Center(
-          child: Container(
-            padding: EdgeInsets.all(20.0),
-            margin: EdgeInsets.only(left: 20.0, right: 20.0),
-            height: 350,
-            color: Colors.white,
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  AuthTitle.Title(title: 'ВХОД'),
-                  SizedBox(height: 30),
-                  TextInput(
-                    validator: _emailValidator,
-                    onSaved: (val) => _email = val,
-                    hintText: 'Email',
-                    labelText: 'Email',
-                    keyboardType: TextInputType.emailAddress,
-                  ),
-                  SizedBox(height: 10),
-                  TextInput(
-                    validator: _passwordValidator,
-                    onSaved: (val) => _password = val,
-                    hintText: 'Пароль',
-                    labelText: 'Пароль',
-                    obscureText: true,
-                  ),
-                  SizedBox(height: 20),
-                  Button(
-                    title: 'Войти',
-                    onPress: _submit,
-                    width: 250,
-                  )
-                ],
+          child: SingleChildScrollView(
+            child: Container(
+              padding: EdgeInsets.all(20.0),
+              margin: EdgeInsets.only(left: 20.0, right: 20.0),
+              height: 350,
+              color: Colors.white,
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    AuthTitle.Title(title: 'ВХОД'),
+                    SizedBox(height: 30),
+                    TextInput(
+                      validator: _emailValidator,
+                      onSaved: (val) => _email = val,
+                      hintText: 'Email',
+                      labelText: 'Email',
+                      keyboardType: TextInputType.emailAddress,
+                    ),
+                    SizedBox(height: 10),
+                    TextInput(
+                      validator: _passwordValidator,
+                      onSaved: (val) => _password = val,
+                      hintText: 'Пароль',
+                      labelText: 'Пароль',
+                      obscureText: true,
+                    ),
+                    SizedBox(height: 20),
+                    Button(
+                      title: 'Войти',
+                      onPress: !inProgress ? _submit : null,
+                      width: 250,
+                    ),
+                    inProgress
+                        ? Column(
+                            children: <Widget>[
+                              SizedBox(height: 10),
+                              CircularProgressIndicator(),
+                            ],
+                          )
+                        : Container(),
+                  ],
+                ),
               ),
             ),
           ),
